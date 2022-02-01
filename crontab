@@ -1,0 +1,6 @@
+ENVIRON=test
+LOCAL=1
+PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+# min   hour    day     month   weekday command
+*/5    *       *       *       *       root        bash -l -c "/check_hash.sh" > /output/check.log 2>&1
+
