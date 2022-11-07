@@ -1,2 +1,2 @@
 beautifulsoup4==4.10.0
-mako==1.1.6
+mako==1.2.2
