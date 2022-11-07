@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="refresh" content="60" />
+    <title>RINO Integrity Checker</title>
+    <style>
+        body {
+          font-family: 'Courier New', monospace;
+          margin-left: 30px;
+        }
+    </style>
+</head>
+<body>
+    <h1>RINO Integrity Checker</h1>
+    <div>
+        The last integrity check for <a href="https://${domain}">${domain}</a> frontend was done at <b>${current_run_date}</b> and the result was:
+        <br/>
+        <br/>
+        % if current_run_result  == "MATCH":
+        <div style="color: #238823"><b>Hashes Match</b></div>
+        <br/>
+        <div>
+            Hash of the frontend built independently was the same:
+            <br/>
+            <br/>
+            <table style="text-align: left;">
+                <tr><td><b>Integrity hash from server(https://${domain}/build-integrity.txt): </b></td><td>${server_integrity_hash}</td></tr>
+                <tr><td><b>Integrity hash from build: </b> </td><td>${build_integrity_hash}<br/></td></tr>
+            </table>
+            <br/>
+            <br/>
+            Root html file from the build matches server:
+            <br/>
+            <br/>
+            <table style="text-align: left;">
+                <tr><td><b>index.html hash from server: </b> </td><td>${server_index_hash}</td></tr>
+                <tr><td><b>index.html hash from build: </b> </td><td>${build_index_hash}</td></tr>
+            </table>
+            Monero worker file from the build matches server:
+            <br/>
+            <br/>
+            <table style="text-align: left;">
+                <tr><td><b>service_worker.js hash from server: </b> </td><td>${server_worker_hash}</td></tr>
+                <tr><td><b>service_worker.js hash from build: </b> </td><td>${build_worker_hash}</td></tr>
+            </table>
+        </div>
+        </div>
+        % elif current_run_result=="NOT_MATCH":
+        <div style="color: #D2222D"><b>Failed</b></div>
+        <div>
+            % if server_index_hash != server_index_hash:
+                <div>
+                    Root html file from the independent build does not match file given by the server:
+                    <br/>
+                    <br/>
+                    <table style="text-align: left;">
+                        <tr><td><b>index.html hash from server: </b> </td><td>${server_index_hash}</td></tr>
+                        <tr><td><b>index.html hash from build: </b> </td><td>${build_index_hash}</td></tr>
+                    </table>
+                </div>
+            % elif build_integrity_hash != server_integrity_hash:
+                <div>
+                    Integrity hash from the independent build does not match hash given by the server:
+                    <br/>
+                    <br/>
+                    <table style="text-align: left;">
+                        <tr><td><b>Integrity hash from server(https://${domain}/build-integrity.txt): </b> </td><td>${server_integrity_hash}</td></tr>
+                        <tr><td><b>Integrity hash from build: </b> </td><td>${build_integrity_hash}</td></tr>
+                    </table>
+                </div>
+            % elif build_worker_hash != server_worker_hash:
+                <div>
+                    Monero worker hash from the independent build does not match hash given by the server:
+                    <br/>
+                    <br/>
+                    <table style="text-align: left;">
+                        <tr><td><b>service_worker.js hash from server: </b> </td><td>${server_worker_hash}</td></tr>
+                        <tr><td><b>service_worker.js hash from build: </b> </td><td>${build_worker_hash}</td></tr>
+                    </table>
+                </div>
+            % endif
+        </div>
+        % else:
+        <div style="color: #FFBF00"><b>Checker error</b></div>
+        There was a problem with the checker.
+        % endif
+        <br/>
+    </div>
+    <div>
+        <h2>Previous Checks</h2>
+        <table style="text-align: left; width: 25%;">
+            <tr><th>Datetime</th><th>Result</th></tr>
+            % for datetime, result in old_results:
+                <tr>
+                    <td>${datetime}</td>
+                    <td>
+                        % if result  == "MATCH":
+                        <div style="color: #238823"><b>Hashes Match</b></div>
+                        % elif result == "NOT_MATCH":
+                        <div style="color: #D2222D"><b>Failed</b></div>
+                        % else:
+                        <div style="color: #FFBF00"><b>Checker error</b></div>
+                        % endif
+                    </td>
+                </tr>
+            % endfor
+        </table>
+    </div>
+</body>
+</html>

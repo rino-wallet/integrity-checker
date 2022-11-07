@@ -1,0 +1,6 @@
+RINO_ENVIRON=test
+PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+
+# min   hour    day     month   weekday  username    command
+*/15    *       *       *       *        root        bash -l -c "/check_hash.sh" | tee /proc/1/fd/1 /output/check.log
+@reboot                                  root        bash -l -c "/check_hash.sh" | tee /proc/1/fd/1 /output/check.log
